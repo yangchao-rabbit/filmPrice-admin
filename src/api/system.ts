@@ -1,3 +1,11 @@
 import request from '@/utils/request'
 
-export const GetMeAPI = () => request.get('/api/v1/user/me')
+export interface User {
+    id?: string
+    name: string
+    password?: string
+    desc?: string
+}
+
+
+export const GetMeAPI = () => request.get('/api/system/me')

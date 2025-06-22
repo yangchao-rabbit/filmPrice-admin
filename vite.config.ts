@@ -23,7 +23,7 @@ export default defineConfig(({ mode }: ConfigEnv) => {
             host: 'localhost',
             port: parseInt(VITE_PORT),
             proxy: {
-                '/api': {
+                '^(/api)': {
                     target: VITE_PROXY_URL,
                     changeOrigin: true,
                 },

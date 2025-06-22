@@ -1,4 +1,4 @@
-# FilePrice 管理后台
+# FilmPrice 管理后台
 
 ## 系统架构
 - **前端框架**: Vue 3 + TypeScript

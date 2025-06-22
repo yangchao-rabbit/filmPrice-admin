@@ -23,6 +23,15 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { LoginAPI } from '@/api/auth'
+import { useUserStore } from '@/stores/useUser'
+import { useRouter } from 'vue-router'
+import { setToken } from '@/utils/auth'
+import { ElMessage } from 'element-plus'
+
+const router = useRouter()
+const userStore = useUserStore()
+
 
 const form = ref({
     username: '',
@@ -37,9 +46,20 @@ const rules = ref({
 const formRef = ref<FormInstance>()
 
 const handleLogin = () => {
-    formRef.value?.validate((valid) => {
+    formRef.value?.validate(async (valid) => {
         if (valid) {
-            console.log('submit')
+            const res = await LoginAPI(form.value)
+            if (res.code === 0) {
+
+                setToken(res.data)
+
+                ElMessage.success('登录成功')
+                await router.push('/dashboard')
+                
+                userStore.getUserInfo()
+            } else {
+                ElMessage.error(res.msg)
+            }
         }
     })
 }

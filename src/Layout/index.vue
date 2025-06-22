@@ -54,19 +54,6 @@
                             </el-icon>
                             <span>资产</span>
                         </template>
-                        <el-menu-item index="/asset/cloud">云账号管理</el-menu-item>
-                        <el-menu-item index="/asset/project">云项目管理</el-menu-item>
-                        <el-menu-item index="/asset/host">主机管理</el-menu-item>
-                        <el-menu-item index="/asset/container">K8S节点管理</el-menu-item>
-                        <el-menu-item index="/asset/db">Mysql管理</el-menu-item>
-                        <el-menu-item index="/asset/es">ES管理</el-menu-item>
-                        <el-menu-item index="/asset/redis">Redis管理</el-menu-item>
-                        <el-menu-item index="/asset/kafka">Kafka管理</el-menu-item>
-                        <el-menu-item index="/asset/mongo">MongoDB管理</el-menu-item>
-                        <el-menu-item index="/asset/lb">LB管理</el-menu-item>
-                        <el-menu-item index="/asset/tchouse">TCHouse管理</el-menu-item>
-                        <el-menu-item index="/asset/tdsql">TDSql管理</el-menu-item>
-                        <el-menu-item index="/asset/tdsqlc">TDSql-C管理</el-menu-item>
                     </el-sub-menu>
                     <el-sub-menu index="/task">
                         <template #title>
