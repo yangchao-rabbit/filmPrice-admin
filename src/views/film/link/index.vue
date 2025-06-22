@@ -4,7 +4,7 @@
         :data="Index.data"
         :loading="Index.loading"
         :page="Index.page"
-        title="用户列表"
+        title="胶片链接列表"
         @refresh="Index.getList"
         @update:page="Index.updatePage"
     >
@@ -16,11 +16,6 @@
             <el-button icon="Search" type="info" @click="Index.getList">搜索</el-button>
         </template>
 
-        <template #groups="{ row }">
-            <el-tag v-for="item in row.groups" :key="item.id">
-                {{ item.name }}
-            </el-tag>
-        </template>
 
         <template #table-columns>
             <el-table-column label="操作" width="140">
@@ -37,11 +32,11 @@
 
 <script lang="ts" setup>
 import { onMounted, reactive } from 'vue'
-import { type User, UserDeleteAPI, UserListAPI } from '@/api/system.ts'
+import { type FilmLink, FilmLinkDeleteAPI, FilmLinkListAPI } from '@/api/film.ts'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { DateFormat } from '@/utils/format.ts'
 import { DiaType, type IDia } from '@/types/diaType.ts'
-import DialogModel from '@/views/system/user/DialogModel.vue'
+import DialogModel from './DialogModel.vue'
 import PageList from '@/components/PageList.vue'
 
 const Index = reactive({
@@ -57,23 +52,21 @@ const Index = reactive({
         Index.page.size = size
         Index.page.current = current
     },
-    data: [] as User[],
+    data: [] as FilmLink[],
     loading: false,
     columns: [
-        { label: 'ID', prop: 'id' },
-        { label: '类型', prop: 'type', sortable: true },
-        { label: '名称', prop: 'name', sortable: true },
-        { label: '邮箱', prop: 'email', default: false },
-        { label: 'OpenID', prop: 'open_id', default: false },
-        { label: '头像', prop: 'avatar', default: false },
-        { label: '组', prop: 'groups' },
+        { label: 'ID', prop: 'id', default: false },
+        { label: '胶片', prop: 'film.name' },
+        { label: '平台', prop: 'platform' },
+        { label: '名称', prop: 'name' },
+        { label: '链接', prop: 'url', default: false },
+        { label: '状态', prop: 'is_active' },
         { label: '创建时间', prop: 'created_at', default: false, formatter: (row: any) => DateFormat(row.created_at) },
         { label: '更新时间', prop: 'updated_at', default: false, formatter: (row: any) => DateFormat(row.updated_at) },
-        { label: '描述', prop: 'desc' },
     ],
     getList: async () => {
         Index.loading = true
-        const resp = await UserListAPI({
+        const resp = await FilmLinkListAPI({
             page: Index.page.current,
             page_size: Index.page.size,
             filter: Index.search,
@@ -105,13 +98,13 @@ const Index = reactive({
         }
     },
     onDelete: (row: any) => {
-        ElMessageBox.confirm(`是否删除 [${row.name}] 用户?`, '提示', {
+        ElMessageBox.confirm(`是否删除 [${row.name}] 胶片链接?`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning',
         })
             .then(async () => {
-                const resp = await UserDeleteAPI(row.id)
+                const resp = await FilmLinkDeleteAPI(row.id)
                 if (resp.code === 0) {
                     ElMessage.success('删除成功')
 

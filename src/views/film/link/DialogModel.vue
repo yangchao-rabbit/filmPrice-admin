@@ -1,29 +1,24 @@
 <template>
     <el-dialog :before-close="detail.onClose" :model-value="show" :title="detail.title" destroy-on-close>
         <el-form ref="diaFormRef" :model="detail.data" :rules="detail.rules" label-suffix=":" label-width="120px">
-            <el-form-item label="类型" prop="type">
-                <el-select v-model="detail.data.type" placeholder="请选择">
-                    <el-option label="本地用户" value="local"></el-option>
-                    <el-option label="Lark用户" value="lark"></el-option>
+            <el-form-item label="胶片" prop="film_id">
+                <el-select v-model="detail.data.film_id" placeholder="请选择胶片">
+                    <el-option v-for="item in Film.data" :key="item.id" :label="item.alias" :value="item.id" />
                 </el-select>
             </el-form-item>
-            <el-form-item label="用户名" prop="name">
-                <el-input v-model="detail.data.name" clearable placeholder="请输入用户名"></el-input>
+            <el-form-item label="平台" prop="platform">
+                <el-select v-model="detail.data.platform" placeholder="请选择平台">
+                    <el-option v-for="item in FilmPlatform" :key="item" :label="item" :value="item" />
+                </el-select>
             </el-form-item>
-            <el-form-item v-if="detail.data.type === 'local'" label="密码" prop="password">
-                <el-input v-model="detail.data.password" clearable placeholder="请输入密码" show-password type="password"></el-input>
+            <el-form-item label="名称" prop="name">
+                <el-input v-model="detail.data.name" placeholder="请输入名称" />
             </el-form-item>
-            <el-form-item v-if="detail.data.type === 'lark'" label="OpenID" prop="open_id">
-                <el-input v-model="detail.data.open_id" clearable placeholder="请输入OpenID, Lark用户必填"></el-input>
+            <el-form-item label="链接" prop="url">
+                <el-input v-model="detail.data.url" placeholder="请输入链接" />
             </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-                <el-input v-model="detail.data.email" clearable placeholder="请输入邮箱"></el-input>
-            </el-form-item>
-            <el-form-item label="头像" prop="avatar">
-                <el-input v-model="detail.data.avatar" clearable placeholder="请输入头像链接"></el-input>
-            </el-form-item>
-            <el-form-item label="描述" prop="desc">
-                <el-input v-model="detail.data.desc" placeholder="请输入描述" type="text" />
+            <el-form-item label="状态" prop="is_active">
+                <el-switch v-model="detail.data.is_active" />
             </el-form-item>
         </el-form>
 
@@ -37,8 +32,9 @@
 <script lang="ts" setup>
 import { DiaType, type IDia } from '@/types/diaType.ts'
 import { reactive, ref, watch } from 'vue'
-import { UserCreateAPI, UserDetailAPI, UserUpdateAPI } from '@/api/system.ts'
+import { FilmLinkCreateAPI, FilmLinkDetailAPI, FilmLinkUpdateAPI, type Film, FilmListAPI } from '@/api/film.ts'
 import _ from 'lodash'
+import { FilmPlatform } from './index.ts'
 import { ElMessage, type FormInstance } from 'element-plus'
 
 const props = defineProps<IDia>()
@@ -55,13 +51,14 @@ const detail = reactive({
     title: '',
     data: {},
     rules: {
-        type: [{ required: true, message: '请选择用户类型', trigger: 'change' }],
-        name: [{ required: true, message: '请输入用户名称', trigger: 'blur' }],
-        password: [{ required: true, message: '请输入用户密码', trigger: 'blur' }],
-        open_id: [{ required: true, message: '请输入用户OpenID', trigger: 'blur' }]
+        film_id: [{ required: true, message: '请选择胶片', trigger: 'change' }],
+        platform: [{ required: true, message: '请选择平台', trigger: 'change' }],
+        name: [{ required: true, message: '请输入名称', trigger: 'blur' }],
+        url: [{ required: true, message: '请输入链接', trigger: 'blur' }],
+        is_active: [{ required: true, message: '请选择状态', trigger: 'change' }],
     },
     getOne: async (id: number) => {
-        const res = await UserDetailAPI(id)
+        const res = await FilmLinkDetailAPI(id)
         detail.data = res.data
     },
     onClose: () => {
@@ -76,7 +73,7 @@ const detail = reactive({
 
             switch (props.type) {
                 case DiaType.Add:
-                    const create = await UserCreateAPI(params)
+                    const create = await FilmLinkCreateAPI(params)
                     if (create.code === 0) {
                         detail.onClose()
                         emits('onSubmit')
@@ -86,7 +83,7 @@ const detail = reactive({
                     }
                     break
                 case DiaType.Edit:
-                    const update = await UserUpdateAPI(props!.id, params)
+                    const update = await FilmLinkUpdateAPI(props!.id, params)
                     if (update.code === 0) {
                         ElMessage.success('修改成功')
                         detail.onClose()
@@ -99,17 +96,31 @@ const detail = reactive({
     },
 })
 
+const Film = reactive({
+    data: [] as Film[],
+    getList: async (filter?: string) => {
+        const res = await FilmListAPI({ filter, page_size: 20 })
+        if (res.code === 0) {
+            Film.data = res.data.rows
+        }
+    },
+})
+
 watch(
     () => props.show,
     (val) => {
         if (val) {
+            Film.getList()
+
             switch (props.type) {
                 case DiaType.Add:
-                    detail.title = '新增用户'
-                    detail.data = {}
+                    detail.title = '新增胶片链接'
+                    detail.data = {
+                        is_active: true,        
+                    }
                     break
                 case DiaType.Edit:
-                    detail.title = '编辑用户'
+                    detail.title = '编辑胶片链接'
                     detail.getOne(props!.id)
                     break
             }

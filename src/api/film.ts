@@ -14,6 +14,30 @@ export interface Film {
     updated_at?: string
 }
 
+export interface FilmLink {
+    id: string
+    film_id: string
+    platform: string
+    name: string
+    url: string
+    is_active: boolean
+    film?: Film
+    price?: FilmPrice[]
+}
+
+export interface FilmPrice {
+    id: string
+    link_id: string
+    price: number
+}
+
+export interface FilmPriceHistory {
+    id: string
+    link_id: string
+    price: number
+    checked_at: string
+}
+
 export const FilmListAPI = (params: object) => request.get('/api/film', { params })
 
 export const FilmDetailAPI = (id: string) => request.get(`/api/film/${id}`)
@@ -44,7 +68,7 @@ export const FilmPriceHistoryUpdateAPI = (id: string, data: object) => request.p
 
 export const FilmPriceHistoryDeleteAPI = (id: string) => request.delete(`/api/film/price-history/${id}`)
 
-export const FilmLinkAPI = (params: object) => request.get('/api/film/link', { params })
+export const FilmLinkListAPI = (params: object) => request.get('/api/film/link', { params })
 
 export const FilmLinkDetailAPI = (id: string) => request.get(`/api/film/link/${id}`)
 
