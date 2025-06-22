@@ -1,0 +1,16 @@
+@use 'themes';
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+#app {
+    margin: 0;
+}
+
+html,
+body,
+#app {
+    height: 100%;
+}
