@@ -139,6 +139,11 @@ const resetCols = () => {
 <style lang="scss" scoped>
 .page-card {
     margin: 20px;
+    
+
+    .el-pagination {
+        margin-top: 20px;
+    }
 }
 .page-header__title {
     font-size: 18px;

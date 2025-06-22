@@ -129,6 +129,8 @@ onMounted(() => {
     isDark.value = window.localStorage.getItem('dark') === 'true'
 
     userStore.getUserInfo()
+
+    activeMenu.value = route.path
 })
 </script>
 
@@ -204,6 +206,7 @@ onMounted(() => {
 
         &.is-active {
             background-color: rgba(255, 255, 255, 0.15);
+            color: var(--layout-sidebar-active-text);
         }
 
         &:hover {

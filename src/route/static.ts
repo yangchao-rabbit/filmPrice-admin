@@ -10,6 +10,53 @@ export const staticRoutes = [
         },
     },
     {
+        name: 'Film',
+        path: '/film',
+        meta: {
+            id: 200,
+            icon: 'Film',
+            title: '胶片管理',
+        },
+        children: [
+            {
+                name: 'FilmList',
+                path: '/film/list',
+                component: () => import('@/views/film/index/index.vue'),
+                meta: {
+                    id: 201,
+                    title: '胶片列表',
+                },
+            },
+            {
+                name: 'FilmLink',
+                path: '/film/link',
+                component: () => import('@/views/film/link/index.vue'),
+                meta: {
+                    id: 202,
+                    title: '胶片链接',
+                },
+            },
+            {
+                name: 'FilmPrice',
+                path: '/film/price',
+                component: () => import('@/views/film/price/index.vue'),
+                meta: {
+                    id: 203,
+                    title: '胶片价格',
+                },
+            },
+            {
+                name: 'FilmPriceHistory',
+                path: '/film/price-history',
+                component: () => import('@/views/film/history/index.vue'),
+                meta: {
+                    id: 204,
+                    title: '胶片历史历史',
+                },
+            },
+        ],
+    },
+    {
         name: 'System',
         path: '/system',
         meta: {
