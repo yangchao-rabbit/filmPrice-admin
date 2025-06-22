@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { GetMeAPI } from '@/api/system.ts'
+import { GetMeAPI, type User } from '@/api/system.ts'
 import { ElMessage } from 'element-plus'
 
 export const useUserStore = defineStore(
     'user',
     () => {
-        const info = ref(null)
+        const info = ref<User | null>(null)
 
         const getUserInfo = async () => {
             const res = await GetMeAPI()
